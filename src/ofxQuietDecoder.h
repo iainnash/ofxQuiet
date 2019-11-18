@@ -14,6 +14,7 @@ public:
     size_t readBufferChannel(ofSoundBuffer &buf, size_t channel);
     ofEvent<size_t> onMessage;
     std::string consumeMessage();
+    bool hasData();
 private:
     void pollForInput(void);
     quiet_decoder* decoder;

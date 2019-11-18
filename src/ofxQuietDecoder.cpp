@@ -4,7 +4,7 @@ void ofxQuietDecoder::setup(const char *profileName) {
     quiet_decoder_options* options = quiet_decoder_profile_filename("/usr/local/share/quiet/quiet-profiles.json", profileName);
     localBuf.allocate(512, 1);
     recvBuffer.resize(4096);
-    decoder = quiet_decoder_create(options, 44000);
+    decoder = quiet_decoder_create(options, 44100);
     quiet_decoder_set_nonblocking(decoder);
     recvSize = 0;
 }
@@ -31,6 +31,10 @@ std::string ofxQuietDecoder::consumeMessage() {
     return str;
 }
 
+bool ofxQuietDecoder::hasData() {
+    return recvSize > 0;
+}
+
 size_t ofxQuietDecoder::readBuffer(ofSoundBuffer &buf) {
     size_t len = quiet_decoder_consume(decoder, buf.getBuffer().data(), buf.getNumFrames());
     pollForInput();
@@ -38,7 +42,14 @@ size_t ofxQuietDecoder::readBuffer(ofSoundBuffer &buf) {
 }
 
 size_t ofxQuietDecoder::readBufferChannel(ofSoundBuffer &buf, size_t channel) {
-    localBuf.setChannel(buf, channel);
+    size_t channels = buf.getNumChannels();
+    if (localBuf.size() < buf.size()/channels) {
+        // resize buf if needed
+        localBuf.resize(buf.size()/channels);
+    }
+    for (size_t i = 0; i < buf.getNumFrames(); i++) {
+        localBuf[i] = buf.getSample(i, channel);
+    }
     size_t len = quiet_decoder_consume(decoder, localBuf.getBuffer().data(), localBuf.getNumFrames());
     pollForInput();
     return len;
