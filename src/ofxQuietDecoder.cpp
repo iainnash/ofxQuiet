@@ -1,7 +1,20 @@
 #include "ofxQuietDecoder.h"
+#include "quietProfileData.h"
 
 void ofxQuietDecoder::setup(const char *profileName) {
-    quiet_decoder_options* options = quiet_decoder_profile_filename("/usr/local/share/quiet/quiet-profiles.json", profileName);
+    quiet_decoder_options* options = quiet_decoder_profile_str(
+        _usr_local_share_quiet_quiet_profiles_json,
+        profileName
+    );
+    setupWithOptions(options);
+}
+
+void ofxQuietDecoder::setup(const char *profileName, const char *profilePath) {
+    quiet_decoder_options* options = quiet_decoder_profile_filename(profilePath, profileName);
+    setupWithOptions(options);
+}
+
+void ofxQuietDecoder::setupWithOptions(quiet_decoder_options *options) {
     localBuf.allocate(512, 1);
     recvBuffer.resize(4096);
     decoder = quiet_decoder_create(options, 44100);
