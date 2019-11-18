@@ -11,6 +11,7 @@ public:
     void mousePressed(int mouseX, int mouseY, int button);
     ofSoundStream soundStream;
     void onMessage1(size_t & length);
+    void onMessage2(size_t & length);
     void audioOut(ofSoundBuffer & output);
     void audioIn(ofSoundBuffer & input);
     
