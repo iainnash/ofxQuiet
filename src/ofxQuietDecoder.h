@@ -2,6 +2,7 @@
 
 #include "quiet.h"
 #include "ofSoundBuffer.h"
+#include "ofMain.h"
 #include "ofEvent.h"
 #include "quiet/decoder.h"
 #include <vector>
@@ -20,7 +21,7 @@ private:
     void setupWithOptions(quiet_decoder_options *options);
     void pollForInput(void);
     quiet_decoder* decoder;
-    std::vector<unsigned char> recvBuffer;
+    ofBuffer recvBuffer;
     ofSoundBuffer localBuf;
     ssize_t recvSize = 0;
 };

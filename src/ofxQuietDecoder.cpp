@@ -16,7 +16,7 @@ void ofxQuietDecoder::setup(const char *profileName, const char *profilePath) {
 
 void ofxQuietDecoder::setupWithOptions(quiet_decoder_options *options) {
     localBuf.allocate(512, 1);
-    recvBuffer.resize(4096);
+    recvBuffer.allocate(4096);
     decoder = quiet_decoder_create(options, 44100);
     quiet_decoder_set_nonblocking(decoder);
     recvSize = 0;
@@ -29,7 +29,7 @@ void ofxQuietDecoder::pollForInput() {
     if (recvSize > 0) {
         return;
     }
-    recvSize = quiet_decoder_recv(decoder, recvBuffer.data(), recvBuffer.capacity());
+    recvSize = quiet_decoder_recv(decoder, (unsigned char*)recvBuffer.getData(), recvBuffer.size());
     if (recvSize > 0) {
         size_t recvSizePos = recvSize;
         onMessage.notify(recvSizePos);
@@ -38,8 +38,7 @@ void ofxQuietDecoder::pollForInput() {
 
 std::string ofxQuietDecoder::consumeMessage() {
     std::string str;
-    str += (char *)recvBuffer.data();
-    recvBuffer.clear();
+    str.append(recvBuffer.getData());
     recvSize = 0;
     return str;
 }

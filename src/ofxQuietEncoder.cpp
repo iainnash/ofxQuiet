@@ -10,6 +10,10 @@ void ofxQuietEncoder::setup(const char *profileName) {
     setupWithOptions(options);
 }
 
+void ofxQuietEncoder::setVolume(float newVolume) {
+    volume = newVolume;
+}
+
 void ofxQuietEncoder::setup(const char *profileName, const char *profilePath) {
     quiet_encoder_options* options = quiet_encoder_profile_filename(profilePath, profileName);
     setupWithOptions(options);
@@ -39,7 +43,7 @@ size_t ofxQuietEncoder::writeBufferChannel(ofSoundBuffer &buf, size_t channel) {
     }
     size_t at;
     for (at = 0; at < samplesToWrite; at++) {
-        buf.getSample(at, channel) = localBuf[at];
+        buf.getSample(at, channel) = volume * localBuf[at];
     }
     return at;
 }
@@ -49,5 +53,10 @@ size_t ofxQuietEncoder::addText(char *text, size_t size) {
 }
 
 size_t ofxQuietEncoder::addText(std::string text) {
+    std::cout << "addingtext" << text << std::endl;
     return quiet_encoder_send(encoder, text.c_str(), text.size());
+}
+
+size_t ofxQuietEncoder::addData(ofBuffer data) {
+    return quiet_encoder_send(encoder, (unsigned char *)data.getData(), data.size());
 }
