@@ -70,7 +70,8 @@ common:
 	# ADDON_INCLUDES_EXCLUDE =
 
 osx:
-	ADDON_LIBS += libs/libfec/libs/osx/libfec.a
-	ADDON_LIBS += libs/jansson/libs/osx/libjansson.a
-	ADDON_LIBS += libs/liquid/libs/osx/libliquid.a
-	ADDON_LIBS += libs/quiet/libs/osx/libquiet.a
+	ADDON_LIBS = 
+	ADDON_LIBS += libs/libfec/lib/osx/libfec.a
+	ADDON_LIBS += libs/jansson/lib/osx/libjansson.a
+	ADDON_LIBS += libs/liquid/lib/osx/libliquid.a
+	ADDON_LIBS += libs/quiet/lib/osx/libquiet.a
